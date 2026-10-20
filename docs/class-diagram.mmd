@@ -1,0 +1,73 @@
+classDiagram
+  class Category {
+    +int id
+    +string name
+    +string icon
+  }
+  class MenuItem {
+    +int id
+    +string name
+    +string description
+    +number price
+    +string emoji
+    +string image
+    +int categoryId
+    +List~string~ tags
+    +string prepTime
+    +hasTag(tag) bool
+    +matches(query) bool
+    +getReviews(reviews) List~Review~
+    +getAverageRating(reviews) number
+  }
+  class Review {
+    +int id
+    +int menuItemId
+    +string author
+    +int rating
+    +string comment
+    +string date
+    +getInitials() string
+  }
+  class CartItem {
+    +MenuItem menuItem
+    +int quantity
+    +withQuantity(qty) CartItem
+    +getSubtotal() number
+  }
+  class Cart {
+    +List~CartItem~ items
+    +addItem(item, qty) Cart
+    +updateQuantity(itemId, qty) Cart
+    +removeItem(itemId) Cart
+    +clear() Cart
+    +getItemCount() int
+    +getSubtotal() number
+    +getDeliveryFee(rule) number
+    +getTotal(rule) number
+  }
+  class Order {
+    +string id
+    +List~CartItem~ items
+    +string customerName
+    +string address
+    +string phone
+    +string paymentMethod
+    +string notes
+    +number deliveryFee
+    +string status
+    +string createdAt
+    +getSubtotal() number
+    +getTotal() number
+  }
+  class FavoritesList {
+    +List~int~ itemIds
+    +toggle(itemId) FavoritesList
+    +has(itemId) bool
+    +clear() FavoritesList
+  }
+  Category "1" --> "*" MenuItem : groups
+  MenuItem "1" --> "*" Review : has
+  Cart "1" *-- "*" CartItem : contains
+  CartItem "*" --> "1" MenuItem : refers to
+  Cart ..> Order : checkout creates
+  FavoritesList "*" --> "*" MenuItem : saves
